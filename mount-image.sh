@@ -58,20 +58,9 @@ do
 
     echo "Mounting ${NODES[$i]}"
 
-    ROOT=$(mktemp -d)
-
     e2fsck -fy ${NODES[$i]}
-    fuse2fs -o fakeroot,ro ${NODES[$i]} ${ROOT}
-    echo "Successfully mounted ${NODES[$i]} at ${ROOT}"
-
-    echo "Copying from ${ROOT} to $1"
-    cp -Rpd ${ROOT} $1
-
-    fusermount -u ${ROOT}
-    echo "Successfully unmounted ${ROOT}"
-
-    rmdir ${ROOT}
-    echo "Successfully removed ${ROOT}"
+    fuse2fs -o fakeroot,ro ${NODES[$i]} $2
+    echo "Successfully mounted ${NODES[$i]} at $2"
 
     exit 0 # stop at first ext4 partition
 done

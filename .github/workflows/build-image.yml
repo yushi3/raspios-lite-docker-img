@@ -15,16 +15,19 @@ on:
 
 jobs:
   build:
+    name: Build docker image
     runs-on: ubuntu-22.04
     steps:
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install fuse2fs fdisk jq
       - uses: actions/checkout@v3
       - name: Create directory
         run: mkdir out
-      - name: Extract image
+      - name: Mount image
         env:
           DATE: ${{ github.event.inputs.raspios-release-date }}
           DEBIAN: ${{ github.event.inputs.raspios-release-name }}
-        run: ./extract-image.sh out
+        run: ./mount-image.sh out
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
