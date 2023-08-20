@@ -1,0 +1,25 @@
+name: Build raspios docker image
+on:
+  workflow_dispatch:
+    inputs:
+      raspios-release-name:
+        description:  Raspios release name
+        default: bullseye
+      raspios-release-date:
+        description:  Raspios release date
+        default: 2023-05-03
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    env:
+      DOCKER_IMAGE: ghcr.io/${{ github.repository_owner }}/raspios-lite-${{ github.event.inputs.raspios-release-name }}:${{ github.event.inputs.raspios-release-date }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build image
+        env:
+          DATE: ${{ github.event.inputs.raspios-release-date }}
+          DEBIAN: ${{ github.event.inputs.raspios-release-name }}
+        run: ./make-image.sh
+      - name: Push image
+        run: docker push ${DOCKER_IMAGE}
