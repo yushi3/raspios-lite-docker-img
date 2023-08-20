@@ -5,9 +5,30 @@ set -e
 DATE="${DOCKER_IMAGE:-2023-05-03}"
 DEBIAN="${DEBIAN:-bullseye}"
 
-DOCKER_IMAGE="${DOCKER_IMAGE:-raspios-lite-${DEBIAN}}:${DATE}"
-
 IMAGE="${DATE}-raspios-${DEBIAN}-arm64-lite.img"
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <directory>"
+    exit 1
+fi
+
+if [ ! -d "$1" ]; then
+    echo "Error: directory $1 does not exist." 
+    exit 1
+fi
+
+shopt -s nullglob
+shopt -s dotglob
+
+files=($1/*)
+
+shopt -u nullglob
+shopt -u dotglob
+
+if [ ${#files[*]} -gt 0 ]; then
+    echo "Error: directory $1 is not empty."
+    exit 1
+fi
 
 echo "Downloading ${IMAGE}.xz"
 
@@ -43,8 +64,8 @@ do
     fuse2fs -o fakeroot,ro ${NODES[$i]} ${ROOT}
     echo "Successfully mounted ${NODES[$i]} at ${ROOT}"
 
-    echo "Building docker image ${DOCKER_IMAGE}"
-    docker build -t ${DOCKER_IMAGE} -f Dockerfile --platform linux/arm64/v8 ${ROOT}
+    echo "Copying from ${ROOT} to $1"
+    cp -Rpd ${ROOT} $1
 
     fusermount -u ${ROOT}
     echo "Successfully unmounted ${ROOT}"

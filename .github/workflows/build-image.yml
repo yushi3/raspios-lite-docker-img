@@ -8,18 +8,33 @@ on:
       raspios-release-date:
         description:  Raspios release date
         default: 2023-05-03
+      latest:
+        description: Tag as latest
+        type: boolean
+        default: false
 
 jobs:
   build:
     runs-on: ubuntu-22.04
-    env:
-      DOCKER_IMAGE: ghcr.io/${{ github.repository_owner }}/raspios-lite-${{ github.event.inputs.raspios-release-name }}:${{ github.event.inputs.raspios-release-date }}
     steps:
       - uses: actions/checkout@v3
-      - name: Build image
+      - name: Create directory
+        run: mkdir out
+      - name: Extract image
         env:
           DATE: ${{ github.event.inputs.raspios-release-date }}
           DEBIAN: ${{ github.event.inputs.raspios-release-name }}
-        run: ./make-image.sh
-      - name: Push image
-        run: docker push ${DOCKER_IMAGE}
+        run: ./extract-image.sh out
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: out
+          push: true
+          platforms: linux/arm64/v8
+          build-args: |
+            ORG=${{ github.repository_owner }}
+            REPO=${{ github.repository }}
+          file: Dockerfile
+          tags: |-
+            ghcr.io/${{ github.repository_owner }}/raspios-lite-${{ github.event.inputs.raspios-release-name }}:${{ github.event.inputs.raspios-release-date }}
+            ${{ github.event.inputs.latest && format('ghcr.io/{0}/raspios-lite-{1}:latest', github.repository_owner, github.event.inputs.raspios-release-name) || '' }}
