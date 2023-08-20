@@ -59,8 +59,8 @@ do
     echo "Mounting ${NODES[$i]}"
 
     e2fsck -fy ${NODES[$i]}
-    fuse2fs -o fakeroot,ro ${NODES[$i]} $2
-    echo "Successfully mounted ${NODES[$i]} at $2"
+    fuse2fs -o fakeroot,ro ${NODES[$i]} $1
+    echo "Successfully mounted ${NODES[$i]} at $1"
 
     exit 0 # stop at first ext4 partition
 done
