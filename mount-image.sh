@@ -2,8 +2,8 @@
 
 set -e
 
-DATE="${DOCKER_IMAGE:-2023-05-03}"
-DEBIAN="${DEBIAN:-bullseye}"
+DATE="${DATE:-2024-03-15}"
+DEBIAN="${DEBIAN:-bookworm}"
 
 IMAGE="${DATE}-raspios-${DEBIAN}-arm64-lite.img"
 

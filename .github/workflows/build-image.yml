@@ -4,10 +4,10 @@ on:
     inputs:
       raspios-release-name:
         description:  Raspios release name
-        default: bullseye
+        default: bookworm
       raspios-release-date:
         description:  Raspios release date
-        default: 2023-05-03
+        default: 2024-03-15
       latest:
         description: Tag as latest
         type: boolean
