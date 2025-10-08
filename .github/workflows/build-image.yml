@@ -4,10 +4,13 @@ on:
     inputs:
       raspios-release-name:
         description:  Raspios release name
-        default: bookworm
+        default: trixie
       raspios-release-date:
         description:  Raspios release date
-        default: 2024-03-15
+        default: 2025-10-02
+      raspios-file-date:
+        description:  Raspios file date
+        default: 2025-10-01
       latest:
         description: Tag as latest
         type: boolean
@@ -25,6 +28,7 @@ jobs:
         run: mkdir out
       - name: Mount image
         env:
+          FILE_DATE: ${{ github.event.inputs.raspios-file-date }}
           DATE: ${{ github.event.inputs.raspios-release-date }}
           DEBIAN: ${{ github.event.inputs.raspios-release-name }}
         run: ./mount-image.sh out

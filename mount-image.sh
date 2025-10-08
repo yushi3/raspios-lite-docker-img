@@ -2,10 +2,11 @@
 
 set -e
 
-DATE="${DATE:-2024-03-15}"
-DEBIAN="${DEBIAN:-bookworm}"
+DATE="${DATE:-2025-10-02}"
+FILE_DATE="${FILE_DATE:-2025-10-01}"
+DEBIAN="${DEBIAN:-trixie}"
 
-IMAGE="${DATE}-raspios-${DEBIAN}-arm64-lite.img"
+IMAGE="${FILE_DATE}-raspios-${DEBIAN}-arm64-lite.img"
 
 if [ $# -lt 1 ]; then
     echo "Usage: $0 <directory>"
